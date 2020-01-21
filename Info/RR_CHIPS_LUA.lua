@@ -14,7 +14,8 @@ function main ()
             print("Type \"G\" to edit a game")
                 print("Type \"P\" to create a new player")
                     print("Type \"A\" to add balance to a player")
-                        print("Type \"E\" to exit")
+                        print("Type \"R\" to show the rank")
+                            print("Type \"E\" to exit")
         op = string.lower(tostring(io.read()))
         if op == 'c' then
             local players_ids = {}
@@ -62,6 +63,11 @@ function main ()
         end
         if op == 'a' then
            addBalanceToPlayer()
+        end
+        if op == 'r' then
+            printPlayersRank()
+            print("\n\tPress enter to continue")
+            io.read()
         end
         if op == 'e' then
             os.exit()

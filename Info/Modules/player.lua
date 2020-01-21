@@ -9,7 +9,7 @@ function playerEditBalance (player_id, value, override)
 end
 
 function calcWinPercentage (games_played, win_percentage, new_win_percentage)
-    return ((games_played * win_percentage) + new_win_percentage) / (games_played + 1)
+    return ((math.floor(((games_played * win_percentage) + new_win_percentage) / (games_played + 1) * 100)) / 100)
 end
 
 function validPlayerId (data)
@@ -89,5 +89,39 @@ function addBalanceToPlayer ()
                 end
             end
         end
+    end
+end
+
+function calcPlayersRank ()
+    local rank = {}
+    local players_list = json.decode(openFile("./Players/players_info.json")).players_list
+    for i = 1, #players_list do
+        local player = json.decode(openFile("./Players/player_" .. players_list[i] .. ".json"))
+        table.insert(rank, player)
+    end
+    local comp_balance = function (first, second)
+        if first.balance > second.balance then
+            return true
+        end
+        return false
+    end
+    table.sort(rank, comp_balance)
+    local comp_win_percentage = function (first, second)
+        if first.win_percentage > second.win_percentage then
+            return true
+        end
+        return false
+    end
+    table.sort(rank, comp_win_percentage)
+    return rank
+end
+
+function printPlayersRank ()
+    os.execute('cls')
+    print("\n\n\t\t****Win Percentage Rank****\n")
+    local rank = calcPlayersRank()
+    for i = 1, #rank do
+        print("  **" .. rank[i].name .. ":" .. rank[i].id .. " -- Ranking: " .. i .. "**")
+        print("Win Percentage: " .. rank[i].win_percentage .. "% -- Balance: $" .. rank[i].balance .. "\n")
     end
 end
